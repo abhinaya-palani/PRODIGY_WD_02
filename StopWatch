@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Stopwatch</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .stopwatch {
+            font-size: 4rem;
+            color: #00ff9d;
+            font-family: 'Digital', monospace;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        #startBtn {
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+        }
+
+        #stopBtn {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+        }
+
+        #resetBtn {
+            background: linear-gradient(135deg, #4776e6, #8e54e9);
+        }
+
+        @font-face {
+            font-family: 'Digital';
+            src: url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Digital Stopwatch</h1>
+        <div class="stopwatch" id="displayTime">00:00:00</div>
+        <div class="buttons">
+            <button id="startBtn" class="btn" onclick="watchStart()">Start</button>
+            <button id="stopBtn" class="btn" onclick="watchStop()">Stop</button>
+            <button id="resetBtn" class="btn" onclick="watchReset()">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        let [seconds, minutes, hours] = [0, 0, 0];
+        let displayTime = document.getElementById("displayTime");
+        let timer = null;
+        let isRunning = false;
+
+        function stopwatch() {
+            seconds++;
+            if (seconds === 60) {
+                seconds = 0;
+                minutes++;
+                if (minutes === 60) {
+                    minutes = 0;
+                    hours++;
+                }
+            }
+            
+            let h = hours < 10 ? "0" + hours : hours;
+            let m = minutes < 10 ? "0" + minutes : minutes;
+            let s = seconds < 10 ? "0" + seconds : seconds;
+            
+            displayTime.innerHTML = ${h}:${m}:${s};
+        }
+
+        function watchStart() {
+            if (!isRunning) {
+                isRunning = true;
+                if (timer !== null) {
+                    clearInterval(timer);
+                }
+                timer = setInterval(stopwatch, 1000);
+                document.getElementById("startBtn").disabled = true;
+                document.getElementById("stopBtn").disabled = false;
+            }
+        }
+
+        function watchStop() {
+            isRunning = false;
+            clearInterval(timer);
+            document.getElementById("startBtn").disabled = false;
+            document.getElementById("stopBtn").disabled = true;
+        }
+
+        function watchReset() {
+            isRunning = false;
+            clearInterval(timer);
+            [seconds, minutes, hours] = [0, 0, 0];
+            displayTime.innerHTML = "00:00:00";
+            document.getElementById("startBtn").disabled = false;
+            document.getElementById("stopBtn").disabled = true;
+        }
+
+        // Initialize button states
+        document.getElementById("stopBtn").disabled = true;
+    </script>
+</body>
+</html>
